@@ -1,12 +1,9 @@
-// src/controllers/patientController.js
 const prisma = require('../config/db');
 const { success, error } = require('../utils/apiResponse');
 const { createPatientWithId } = require('../services/idGeneratorService');
 
-// ------------------------------------------------------------
 // GET /api/patients
 // List all patients with a count of their visits
-// ------------------------------------------------------------
 exports.list = async (req, res, next) => {
     try {
         const patients = await prisma.patient.findMany({
@@ -21,7 +18,6 @@ exports.list = async (req, res, next) => {
     }
 };
 
-// ------------------------------------------------------------
 // POST /api/patients
 // Body: { name, age, gender, contact?, address? }
 //
@@ -29,7 +25,6 @@ exports.list = async (req, res, next) => {
 // trust boundary, so it must defend itself even against a caller that skips the
 // UI. We cap field lengths (the SQLite rows and printed reports assume sane
 // sizes), coerce/range-check the age, and accept only known gender values.
-// ------------------------------------------------------------
 const ALLOWED_GENDERS = ['Male', 'Female', 'Other'];
 const MAX_NAME = 100;
 const MAX_CONTACT = 40;
@@ -88,10 +83,8 @@ exports.create = async (req, res, next) => {
     }
 };
 
-// ------------------------------------------------------------
 // GET /api/patients/:id
 // Get one patient with their full visit history
-// ------------------------------------------------------------
 exports.getById = async (req, res, next) => {
     try {
         const patient = await prisma.patient.findUnique({

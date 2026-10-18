@@ -1,4 +1,3 @@
-// src/routes/reportRoutes.js
 const express = require('express');
 const requireAuth = require('../middleware/authMiddleware');
 const controller = require('../controllers/reportController');

@@ -1,5 +1,3 @@
-// scripts/repro-concurrency.js
-// Focused reproduction of the write-concurrency defects.
 //   Usage: node scripts/repro-concurrency.js [N]
 //
 // Prints, for N simultaneous patient creations:

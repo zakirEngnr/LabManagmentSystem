@@ -126,7 +126,7 @@
             renderTests();
         } catch (err) {
             if (err.status !== 401) ui.toast(err.message, 'error');
-            $('testGrid').innerHTML = `<div class="empty-state"><span class="icon">⚠️</span>Failed to load tests</div>`;
+            $('testGrid').innerHTML = `<div class="empty-state"><span class="icon"></span>Failed to load tests</div>`;
         }
     }
 

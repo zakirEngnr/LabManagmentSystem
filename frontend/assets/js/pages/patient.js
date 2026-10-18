@@ -40,7 +40,7 @@
                 <tr>
                     <td colspan="6">
                         <div class="empty-state">
-                            <span class="icon">📋</span>
+                            <span class="icon"></span>
                             <div class="title">No visits yet</div>
                             Create a <strong>New Visit</strong> for this patient.
                         </div>

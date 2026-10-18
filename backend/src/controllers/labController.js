@@ -1,4 +1,3 @@
-// src/controllers/labController.js
 const prisma = require('../config/db');
 const { success, error } = require('../utils/apiResponse');
 const { createVisitWithNumber } = require('../services/idGeneratorService');
@@ -20,9 +19,7 @@ exports.listTests = async (req, res, next) => {
     }
 };
 
-// ============================================================
 // VISITS
-// ============================================================
 
 // GET /api/visits
 exports.listVisits = async (req, res, next) => {
@@ -67,11 +64,9 @@ exports.getVisit = async (req, res, next) => {
     }
 };
 
-// ------------------------------------------------------------
 // POST /api/visits
 // Body: { patientId, testCodes: ["T001", "T006"] }
 // Creates a visit with one LabRecord per selected test.
-// ------------------------------------------------------------
 exports.createVisit = async (req, res, next) => {
     try {
         const { patientId, testCodes } = req.body;
@@ -151,10 +146,8 @@ exports.createVisit = async (req, res, next) => {
     }
 };
 
-// ------------------------------------------------------------
 // PUT /api/visits/:id/payment
 // Body: { paymentStatus: "Paid" | "Unpaid" }
-// ------------------------------------------------------------
 exports.markPayment = async (req, res, next) => {
     try {
         const { paymentStatus } = req.body;
@@ -180,9 +173,7 @@ exports.markPayment = async (req, res, next) => {
     }
 };
 
-// ============================================================
 // RECORDS (results entry)
-// ============================================================
 
 // GET /api/visits/records/:recordId
 // One record with its test fields and existing values
@@ -207,12 +198,10 @@ exports.getRecord = async (req, res, next) => {
     }
 };
 
-// ------------------------------------------------------------
 // PUT /api/visits/records/:recordId/results
 // Body: { values: [{ fieldId, value }, ...] }
 // Replaces existing values, marks record complete, and
 // auto-completes the visit if all its records are done.
-// ------------------------------------------------------------
 exports.saveResults = async (req, res, next) => {
     try {
         const { recordId } = req.params;

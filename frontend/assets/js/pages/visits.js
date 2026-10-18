@@ -79,7 +79,7 @@
                 <tr>
                     <td colspan="7">
                         <div class="empty-state">
-                            <span class="icon">${isEmpty ? '📋' : '🔍'}</span>
+                            <span class="icon">${isEmpty ? '' : ''}</span>
                             <div class="title">${isEmpty ? 'No visits yet' : 'No visits match your filters'}</div>
                             ${isEmpty
                                 ? 'Click <strong>New Visit</strong> to register your first patient.'
@@ -153,7 +153,7 @@
                 <tr>
                     <td colspan="7">
                         <div class="empty-state">
-                            <span class="icon">⚠️</span>
+                            <span class="icon"></span>
                             <div class="title">Could not load visits</div>
                             ${ui.escapeHtml(err.message || '')}
                         </div>

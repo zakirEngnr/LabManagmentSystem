@@ -31,7 +31,7 @@
                 <tr>
                     <td colspan="5">
                         <div class="empty-state">
-                            <span class="icon">📚</span>
+                            <span class="icon"></span>
                             <div class="title">No tests match</div>
                             Try clearing the search or filter.
                         </div>
@@ -71,7 +71,7 @@
                 <tr>
                     <td colspan="5">
                         <div class="empty-state">
-                            <span class="icon">⚠️</span>
+                            <span class="icon"></span>
                             <div class="title">Could not load catalog</div>
                             ${ui.escapeHtml(err.message || '')}
                         </div>

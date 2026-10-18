@@ -1,4 +1,3 @@
-// src/middleware/securityHeaders.js
 // Minimal HTTP security response headers.
 // Written in-house so the project keeps zero extra dependencies.
 function securityHeaders(req, res, next) {

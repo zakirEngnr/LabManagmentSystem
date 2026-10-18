@@ -33,7 +33,7 @@
                 <tr>
                     <td colspan="6">
                         <div class="empty-state">
-                            <span class="icon">${isEmpty ? '👥' : '🔍'}</span>
+                            <span class="icon">${isEmpty ? '' : ''}</span>
                             <div class="title">${isEmpty ? 'No patients yet' : 'No patients match'}</div>
                             ${isEmpty
                                 ? 'Click <strong>New Patient</strong> to add your first one.'
@@ -86,7 +86,7 @@
                 <tr>
                     <td colspan="6">
                         <div class="empty-state">
-                            <span class="icon">⚠️</span>
+                            <span class="icon"></span>
                             <div class="title">Could not load patients</div>
                             ${ui.escapeHtml(err.message || '')}
                         </div>

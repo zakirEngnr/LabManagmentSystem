@@ -14,9 +14,7 @@ const fs = require('fs');
 const { test, before, after, describe } = require('node:test');
 const assert = require('node:assert');
 
-// ------------------------------------------------------------
 // Isolated database + app bootstrap
-// ------------------------------------------------------------
 const TMP_DB = path.join(os.tmpdir(), `clinic-e2e-${process.pid}-${Date.now()}.db`);
 const MAIN_DB = path.join(__dirname, '..', 'prisma', 'clinic.db');
 
@@ -107,9 +105,7 @@ after(async () => {
         fs.rmSync(TMP_DB + suffix, { force: true });
     }
 });
-// ============================================================
 // 1. SMOKE
-// ============================================================
 describe('health', () => {
     test('GET /api/health returns ok', async () => {
         const res = await api('/api/health', { token: null });
@@ -118,9 +114,7 @@ describe('health', () => {
     });
 });
 
-// ============================================================
 // 2. SECURITY
-// ============================================================
 describe('security', () => {
     test('rejects requests with no Authorization header', async () => {
         const res = await api('/api/patients', { token: null });
@@ -177,7 +171,6 @@ describe('security', () => {
         assert.ok(res.status === 413 || res.status === 400, `expected 413/400, got ${res.status}`);
     });
 
-    // ---- CORS: allow-list, not a wildcard ----
     test('reflects CORS only for allowed local origins', async () => {
         const allowed = await fetch(origin + '/api/health', {
             headers: { Origin: 'http://localhost:3000' },
@@ -208,7 +201,6 @@ describe('security', () => {
         assert.notStrictEqual(res.headers.get('access-control-allow-credentials'), 'true');
     });
 
-    // ---- Report endpoint swaps the strict API CSP for a document-safe one ----
     test('report endpoint uses a relaxed CSP that allows the report to render', async () => {
         const patientId = await newPatient('CSP Patient');
         const visit = (
@@ -231,7 +223,6 @@ describe('security', () => {
         assert.ok(/default-src 'none'/.test(apiCsp), 'JSON API must keep default-src none');
     });
 
-    // ---- Input validation hardening on patient create ----
     test('rejects an unknown gender value', async () => {
         const res = await api('/api/patients', {
             method: 'POST',
@@ -273,9 +264,7 @@ describe('security', () => {
     });
 });
 
-// ============================================================
 // 3. HAPPY PATH
-// ============================================================
 describe('happy path', () => {
     test('creates a patient with a PT- id', async () => {
         const res = await api('/api/patients', {
@@ -384,9 +373,7 @@ describe('happy path', () => {
     });
 });
 
-// ============================================================
 // 4. CONCURRENCY  <-- the heart of this suite
-// ============================================================
 describe('concurrency', () => {
     test('40 simultaneous patient creates all succeed with UNIQUE ids', async () => {
         const N = 40;
@@ -508,9 +495,7 @@ describe('concurrency', () => {
         assert.strictEqual(count, 1, `expected exactly 1 LabValue, found ${count} (lost update / duplication)`);
     });
 });
-// ============================================================
 // 5. REPORTS SUMMARY  (aggregation endpoint)
-// ============================================================
 describe('reports summary', () => {
     test('rejects unauthenticated access', async () => {
         const res = await api('/api/reports/summary', { token: null });
@@ -578,14 +563,12 @@ describe('reports summary', () => {
     });
 });
 
-// ============================================================
 // 6. AGGREGATION CORRECTNESS — local-day bucketing, income math,
 //    zero-record visits, and the printable summary.
 //
 // Visits are seeded directly (with fixed LOCAL timestamps) because the API
 // always stamps visitDate = now. The dates are unique to this suite, so no
 // other test can pollute the window.
-// ============================================================
 describe('aggregation correctness over a fixed 3-day window', () => {
     const D1 = '2026-05-05';
     const D2 = '2026-05-06';
@@ -761,10 +744,8 @@ describe('aggregation correctness over a fixed 3-day window', () => {
     });
 });
 
-// ============================================================
 // 7. INPUT VALIDATION HARDENING — malformed payloads must be a
 //    clean 400, never a masked Prisma 500.
-// ============================================================
 describe('input validation hardening', () => {
     test('create visit rejects a non-string patientId', async () => {
         const res = await api('/api/visits', {
@@ -852,9 +833,7 @@ describe('input validation hardening', () => {
     });
 });
 
-// ============================================================
 // 8. SECURITY — cache headers, rate limiting, XSS in printed reports
-// ============================================================
 describe('security hardening', () => {
     test('API responses carry Cache-Control: no-store (patient data must not be cached)', async () => {
         const ok = await api('/api/health', { token: null });

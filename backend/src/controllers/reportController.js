@@ -1,18 +1,9 @@
-// src/controllers/reportController.js
-// ------------------------------------------------------------------
 // Report aggregation: daily / weekly / monthly summaries.
 //
-// Endpoints:
-//   GET /api/reports/summary?from=YYYY-MM-DD&to=YYYY-MM-DD
-//   GET /api/reports/summary/print?from=...&to=...
-// ------------------------------------------------------------------
 const prisma = require('../config/db');
 const { success, error } = require('../utils/apiResponse');
 const { buildReportSummaryHTML } = require('../services/reportService');
 
-// ---------------------------------------------------------------
-// Date helpers
-// ---------------------------------------------------------------
 function toDateOnly(d) {
     // Bucket by LOCAL calendar day, never UTC.
     // The frontend picks its from/to ranges in browser-local time and the
@@ -57,9 +48,7 @@ function parseRange(query) {
     return { from, to };
 }
 
-// ---------------------------------------------------------------
 // Aggregation
-// ---------------------------------------------------------------
 async function buildSummary(from, to) {
     const visits = await prisma.labVisit.findMany({
         where: {
@@ -77,21 +66,17 @@ async function buildSummary(from, to) {
         orderBy: { visitDate: 'asc' },
     });
 
-    // ---------- Income ----------
     let totalIncome = 0;
     let paidIncome = 0;
     let unpaidIncome = 0;
     let pendingVisits = 0;
     let completedVisits = 0;
 
-    // ---------- By test ----------
     const byTest = {};       // code -> { testName, category, count, total }
     const byCategory = {};   // category -> { count, total }
 
-    // ---------- By day ----------
     const byDay = {};        // YYYY-MM-DD -> { visits, income }
 
-    // ---------- Patients ----------
     const patientVisits = {}; // patientId -> { name, visits, total }
 
     for (const v of visits) {
@@ -152,7 +137,6 @@ async function buildSummary(from, to) {
         }
     }
 
-    // ---------- Sort results ----------
     const testList = Object.values(byTest).sort((a, b) => b.count - a.count);
     const categoryList = Object.values(byCategory).sort((a, b) => b.count - a.count);
 
@@ -168,7 +152,6 @@ async function buildSummary(from, to) {
         .sort((a, b) => b.total - a.total)
         .slice(0, 10);
 
-    // ---------- New vs returning ----------
     // A patient is "new" if their first ever visit is within this range.
     const uniquePatientIds = Object.keys(patientVisits);
     let newPatients = 0;
@@ -230,9 +213,7 @@ async function buildSummary(from, to) {
     };
 }
 
-// ---------------------------------------------------------------
 // Endpoint: GET /api/reports/summary
-// ---------------------------------------------------------------
 exports.getSummary = async (req, res, next) => {
     try {
         const { from, to } = parseRange(req.query);
@@ -246,9 +227,7 @@ exports.getSummary = async (req, res, next) => {
     }
 };
 
-// ---------------------------------------------------------------
 // Endpoint: GET /api/reports/summary/print
-// ---------------------------------------------------------------
 exports.getSummaryPrint = async (req, res, next) => {
     try {
         const { from, to } = parseRange(req.query);

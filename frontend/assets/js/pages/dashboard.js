@@ -74,7 +74,7 @@
                 <tr>
                     <td colspan="7">
                         <div class="empty-state">
-                            <span class="icon">📋</span>
+                            <span class="icon"></span>
                             <div class="title">No visits yet</div>
                             Click <strong>New Visit</strong> to register your first patient.
                         </div>
@@ -127,7 +127,7 @@
             <tr>
                 <td colspan="7">
                     <div class="empty-state">
-                        <span class="icon">⚠️</span>
+                        <span class="icon"></span>
                         <div class="title">Could not load visits</div>
                         ${ui.escapeHtml(message || '')}
                     </div>

@@ -42,10 +42,10 @@
         const allDone = visit.records.every(r => r.resultStatus === 'Completed');
         const actions = `
             ${visit.paymentStatus === 'Unpaid'
-                ? `<button class="btn btn-success" onclick="markPaid()">💰 Mark Paid</button>`
+                ? `<button class="btn btn-success" onclick="markPaid()"> Mark Paid</button>`
                 : `<button class="btn btn-outline" onclick="markUnpaid()">Mark Unpaid</button>`}
             <button class="btn btn-primary" onclick="printReport()">
-                🖨️ Print Report
+                 Print Report
             </button>
         `;
         $('visitActions').innerHTML = actions;

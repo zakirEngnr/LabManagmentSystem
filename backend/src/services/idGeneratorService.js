@@ -1,11 +1,6 @@
 
-// src/services/idGeneratorService.js
 //
-// Generates gap-tolerant, never-duplicated human-readable IDs: PT-1001, LV-1001...
 //
-// WHY THERE IS NO $transaction HERE
-// ---------------------------------
-// The previous implementation wrapped the counter bump in a Prisma
 // *interactive* transaction. On SQLite that acquires the single write lock and
 // holds it for the whole JS round-trip, so requests serialise behind each
 // other. Under 40 concurrent patient creations 32 of them died with

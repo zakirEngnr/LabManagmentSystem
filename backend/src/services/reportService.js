@@ -1,21 +1,4 @@
-// src/services/reportService.js
-// Generates a print-ready A4 HTML report for a lab visit.
-//
-// Layout rules
-//   - CBC (reportType "CBC_FORM") always gets its own page.
-//   - Every other test follows, grouped by category, and flows across as many
-//     pages as needed. Tests are never split across a page break, and a
-//     category that continues onto the next page repeats its heading.
-//   - Letterhead, patient block and footer repeat on every page, and
-//     "Page X of Y" is always correct because pages are counted up front.
-//   - Abnormal results are readable on a black-and-white printer: the value is
-//     bold and the flag is a letter (H solid, L outlined), never colour alone.
 
-// ------------------------------------------------------------
-// Page budget (millimetres). The sheet is A4 (297mm); these numbers describe
-// how much of it the results table may use. They are deliberately a little
-// conservative so a fallback font can never push a row onto a new sheet.
-// ------------------------------------------------------------
 const BODY_BUDGET_MM = 182;  // usable height for results table rows
 const ROW_MM = 7;            // one result row
 const DENSE_ROW_MM = 6.6;    // CBC rows (20 fields on one page)
@@ -24,9 +7,7 @@ const BAND_MM = 10;          // category / group heading row
 const SUB_MM = 8.5;          // test-name row above a multi-field test
 const CHARS_PER_LINE = 16;   // result column width, used to estimate wrapping
 
-// ------------------------------------------------------------
 // Helpers
-// ------------------------------------------------------------
 function escapeHtml(s) {
     if (s == null) return '';
     return String(s)
@@ -61,9 +42,7 @@ function hasNumericReferenceRange(field) {
     return !!field && (field.normalMin != null || field.normalMax != null);
 }
 
-// ------------------------------------------------------------
 // One result row  →  { html, mm }
-// ------------------------------------------------------------
 function renderFlatRow(name, value, { kind = 'cbc' } = {}) {
     const raw = value == null ? '' : String(value).trim();
     const result = raw
@@ -126,9 +105,7 @@ function renderTable(rowsHtml, { dense = false, includeReferenceRange = true } =
         </table>`;
 }
 
-// ------------------------------------------------------------
 // CBC page — WBC / RBC / PLT groups (fields are ordered 0-6, 7-14, 15-19)
-// ------------------------------------------------------------
 const CBC_GROUPS = [
     { title: 'White blood cells (WBC)', from: 0, to: 7 },
     { title: 'Red blood cells (RBC)', from: 7, to: 15 },
@@ -149,9 +126,7 @@ function renderCBCPage(record) {
         <div class="cbc-section">${rows}</div>`;
 }
 
-// ------------------------------------------------------------
 // Other tests — turned into unbreakable blocks, then paginated
-// ------------------------------------------------------------
 function buildBlocks(records) {
     return records.map((r) => {
         const fields = sortedFields(r.test);
@@ -193,9 +168,7 @@ function paginate(blocks) {
     return pages.map((rows) => `<div class="results-page">${rows}</div>`);
 }
 
-// ------------------------------------------------------------
 // Page wrapper: letterhead + patient block + body + footer
-// ------------------------------------------------------------
 const MARK_SVG = `
 <svg class="mark" viewBox="0 0 40 40" width="42" height="42" aria-hidden="true">
     <rect width="40" height="40" rx="9" fill="#12343b"/>
@@ -240,9 +213,7 @@ function wrapPage(body, { patient, visit, pageNum, totalPages, printedOn }) {
     </section>`;
 }
 
-// ------------------------------------------------------------
 // Styles
-// ------------------------------------------------------------
 const STYLES = `
     :root {
         --ink: #12343b;
@@ -538,9 +509,7 @@ const STYLES = `
     }
 `;
 
-// ------------------------------------------------------------
 // MAIN: build the full report HTML
-// ------------------------------------------------------------
 function buildReportHTML(visit) {
     const records = visit.records || [];
     const cbcRecords = records.filter((r) => r.test.reportType === 'CBC_FORM');
@@ -596,9 +565,7 @@ ${sheets}
 </body>
 </html>`;
 }
-// ============================================================
 // REPORT SUMMARY — for the Reports page
-// ============================================================
 
 function fmtMoney(n) {
     return 'Rs. ' + Number(n || 0).toLocaleString('en-IN');

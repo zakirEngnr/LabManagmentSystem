@@ -1,4 +1,3 @@
-// src/routes/labRoutes.js
 const express = require('express');
 const requireAuth = require('../middleware/authMiddleware');
 const { reportCsp } = require('../middleware/securityHeaders');
@@ -8,16 +7,13 @@ const router = express.Router();
 
 // Every lab route requires a valid bearer token.
 
-// ---- Test catalog ----
 router.get('/tests', requireAuth, controller.listTests);
 
-// ---- Visits ----
 router.get('/visits', requireAuth, controller.listVisits);
 router.post('/visits', requireAuth, controller.createVisit);
 router.get('/visits/:id', requireAuth, controller.getVisit);
 router.put('/visits/:id/payment', requireAuth, controller.markPayment);
 
-// ---- Records / results ----
 // These use a distinct literal prefix so they never collide with '/visits/:id'.
 router.get('/visits/records/:recordId', requireAuth, controller.getRecord);
 router.put('/visits/records/:recordId/results', requireAuth, controller.saveResults);

@@ -1,5 +1,3 @@
-// scripts/smoke-e2e.js
-// End-to-end smoke test of EVERY API feature against a REAL server.
 //
 //   Usage: node scripts/smoke-e2e.js        (or: npm run test:smoke)
 //
@@ -68,7 +66,6 @@ async function waitForHealth(timeoutMs = 15000) {
 }
 
 async function main() {
-    // ---- Throwaway DB + child server -----------------------------------
     fs.copyFileSync(path.join(ROOT, 'prisma', 'clinic.db'), TMP_DB);
 
     const server = spawn(process.execPath, [path.join(ROOT, 'src', 'server.js')], {
@@ -93,7 +90,6 @@ async function main() {
             process.exit(1);
         }
 
-        // ---- 1. Health & auth ------------------------------------------
         console.log('\n[1] Health & auth');
         const health = await req('/api/health', { token: null });
         check('GET /api/health is public and 200', health.status === 200 && health.body?.data?.status === 'ok');
@@ -105,7 +101,6 @@ async function main() {
         const badHdr = await req('/api/patients', { token: null, headers: { Authorization: 'Basic abc' } });
         check('malformed Authorization header → 401', badHdr.status === 401);
 
-        // ---- 2. Patients ------------------------------------------------
         console.log('\n[2] Patients');
         const p1 = await req('/api/patients', {
             method: 'POST',
@@ -137,7 +132,6 @@ async function main() {
         const missing = await req('/api/patients/does-not-exist');
         check('unknown patient id → 404', missing.status === 404);
 
-        // ---- 3. Catalog -------------------------------------------------
         console.log('\n[3] Test catalog');
         const tests = await req('/api/tests');
         const catalog = tests.body?.data || [];
@@ -148,7 +142,6 @@ async function main() {
         check('fields carry numeric normal ranges for H/L flagging',
             !!cbc && cbc.fields.some((f) => f.normalMin != null || f.normalMax != null));
 
-        // ---- 4. Visits & payment ----------------------------------------
         console.log('\n[4] Visits & payment');
         const v1 = await req('/api/visits', {
             method: 'POST',
@@ -193,7 +186,6 @@ async function main() {
         });
         check('invalid payment status → 400', badPay.status === 400);
 
-        // ---- 5. Result entry → auto-complete ----------------------------
         console.log('\n[5] Result entry & visit auto-completion');
         const cbcRecord = visit.records.find((r) => r.test.testCode === 'T001');
         const rec = await req(`/api/visits/records/${cbcRecord.id}`);
@@ -251,7 +243,6 @@ async function main() {
             `values=${valueCount}, fields=${allFields.length}`);
         check('re-saved value is readable', after.body.data.values.every((v) => v.value === '11'));
 
-        // ---- 6. Printable visit report ----------------------------------
         console.log('\n[6] Printable reports');
         const report = await req(`/api/visits/${visit.id}/report`);
         const reportCsp = report.headers.get('content-security-policy') || '';
@@ -264,7 +255,6 @@ async function main() {
         check('report carries Cache-Control: no-store', report.headers.get('cache-control') === 'no-store');
         check('report forbids framing', report.headers.get('x-frame-options') === 'DENY');
 
-        // ---- 7. Summary aggregation -------------------------------------
         console.log('\n[7] Period summary (JSON + print)');
         const today = (() => {
             const d = new Date();
@@ -295,7 +285,6 @@ async function main() {
         const printCsp = print.headers.get('content-security-policy') || '';
         check('summary print carries relaxed CSP', !printCsp.includes("default-src 'none'"));
 
-        // ---- 8. Security headers ----------------------------------------
         console.log('\n[8] Security headers');
         check('X-Content-Type-Options: nosniff', health.headers.get('x-content-type-options') === 'nosniff');
         check('X-Frame-Options: DENY', health.headers.get('x-frame-options') === 'DENY');
@@ -305,7 +294,6 @@ async function main() {
             (health.headers.get('content-security-policy') || '').includes("default-src 'none'"));
         check('x-powered-by suppressed', !health.headers.get('x-powered-by'));
 
-        // ---- 9. Concurrency burst ---------------------------------------
         console.log('\n[9] Concurrency (25 parallel patient creates)');
         const burst = await Promise.all(Array.from({ length: 25 }, (_, i) =>
             req('/api/patients', {
@@ -316,7 +304,6 @@ async function main() {
         check('all 25 succeed', okIds.length === 25, `got ${okIds.length}`);
         check('all 25 IDs unique', new Set(okIds).size === okIds.length);
 
-        // ---- 10. 404 hygiene --------------------------------------------
         const noRoute = await req('/api/nope');
         check('unknown /api path → JSON 404', noRoute.status === 404 && noRoute.body?.success === false);
     } finally {

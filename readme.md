@@ -74,7 +74,7 @@ the file is missing or cannot load:
 | Where | File(s) | Fallback |
 | :--- | :--- | :--- |
 | App topbar (every page) | `frontend/index.html`, `frontend/pages/*.html` | `onerror` hides the image; the clinic name remains |
-| Login card | `frontend/pages/login.html` | `onerror` swaps in the 🧪 emoji |
+| Login card | `frontend/pages/login.html` | `onerror` swaps in the  emoji |
 | Printed lab report + summary report | `backend/src/services/reportService.js` | Lab report swaps in its inline SVG mark; summary drops the image |
 
 **How it is served.** `app.js` mounts `frontend/` with `express.static` *after*

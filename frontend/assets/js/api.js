@@ -30,7 +30,6 @@
         const local = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
         if (url.protocol === 'http:' && !local) {
             // Patient data and the login token would travel in clear text.
-            console.warn('[api] Using plain HTTP for a non-local server. Use HTTPS in production.');
         }
         return url.origin;
     }

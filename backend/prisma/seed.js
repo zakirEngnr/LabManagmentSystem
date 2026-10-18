@@ -1,4 +1,3 @@
-// ============================================================
 // prisma/seed.js
 // Seeds the lab test catalog.
 //
@@ -6,18 +5,14 @@
 //       (WBC, RBC, and PLT groups with H/L flag ranges).
 //
 // Run:  node prisma/seed.js
-// ============================================================
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-// ------------------------------------------------------------
 // CBC — 20 fields from the hematology analyzer
 // `min` / `max` are numeric for auto H/L flags.
 // `range` is the display text shown on reports.
-// ------------------------------------------------------------
 const CBC_FIELDS = [
-    // ---- WBC group ----
     { name: 'WBC',        unit: '×10³/uL', range: '4.0 - 11.0',  min: 4.0,  max: 11.0 },
     { name: 'Lymph#',     unit: '×10³/uL', range: '1.0 - 4.0',   min: 1.0,  max: 4.0 },
     { name: 'Mid#',       unit: '×10³/uL', range: '0.2 - 1.5',   min: 0.2,  max: 1.5 },
@@ -25,7 +20,6 @@ const CBC_FIELDS = [
     { name: 'Lymph%',     unit: '%',       range: '20 - 45',     min: 20,   max: 45 },
     { name: 'Mid%',       unit: '%',       range: '2 - 10',      min: 2,    max: 10 },
     { name: 'Gran%',      unit: '%',       range: '40 - 75',     min: 40,   max: 75 },
-    // ---- RBC group ----
     { name: 'HGB',        unit: 'g/dL',    range: '12 - 17',     min: 12,   max: 17 },
     { name: 'RBC',        unit: '×10¹²/L', range: '4.0 - 6.0',   min: 4.0,  max: 6.0 },
     { name: 'HCT',        unit: '%',       range: '36 - 50',     min: 36,   max: 50 },
@@ -34,7 +28,6 @@ const CBC_FIELDS = [
     { name: 'MCHC',       unit: 'g/dL',    range: '32 - 36',     min: 32,   max: 36 },
     { name: 'RDW-CV',     unit: '%',       range: '11 - 15',     min: 11,   max: 15 },
     { name: 'RDW-SD',     unit: 'fL',      range: '35 - 56',     min: 35,   max: 56 },
-    // ---- PLT group ----
     { name: 'PLT',        unit: '×10³/uL', range: '150 - 450',   min: 150,  max: 450 },
     { name: 'MPV',        unit: 'fL',      range: '6.5 - 12',    min: 6.5,  max: 12 },
     { name: 'PDW',        unit: 'fL',      range: '9 - 17',      min: 9,    max: 17 },
@@ -42,9 +35,7 @@ const CBC_FIELDS = [
     { name: 'P-LCR',      unit: '%',       range: '13 - 43',     min: 13,   max: 43 },
 ];
 
-// ------------------------------------------------------------
 // THE TEST CATALOG
-// ------------------------------------------------------------
 const TESTS = [
     // ===== Blood Complete =====
     {
@@ -117,9 +108,7 @@ const TESTS = [
     { code: 'T019', name: 'Stool R/E',   category: 'Other', reportType: 'GENERIC', price: 500, fields: [{ name: 'Result', unit: '', range: 'Normal', min: null, max: null }] },
 ];
 
-// ------------------------------------------------------------
 // MAIN
-// ------------------------------------------------------------
 async function main() {
     console.log('🌱 Seeding lab catalog...\n');
 
