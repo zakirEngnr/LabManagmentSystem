@@ -1,0 +1,126 @@
+// ==========================================================
+// PRISMA SCHEMA — Lab Module Only
+// ==========================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+// ----------------------------------------------------------
+// PATIENT
+// ----------------------------------------------------------
+model Patient {
+  id        String   @id @default(cuid())
+  patientId String   @unique
+  name      String
+  age       Int
+  gender    String
+  contact   String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  visits  LabVisit[] // back-ref from LabVisit.patient
+  records LabRecord[] // back-ref from LabRecord.patient  ← ADDED
+}
+
+// ----------------------------------------------------------
+// LAB TEST CATALOG
+// ----------------------------------------------------------
+model LabTest {
+  id         String   @id @default(cuid())
+  testCode   String   @unique
+  testName   String
+  shortName  String?
+  category   String
+  reportType String
+  price      Float
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  fields  LabTestField[]
+  records LabRecord[] // back-ref from LabRecord.test
+}
+
+// ----------------------------------------------------------
+// LAB TEST FIELDS
+// ----------------------------------------------------------
+// ----------------------------------------------------------
+// LAB TEST FIELDS
+// ----------------------------------------------------------
+model LabTestField {
+  id           String   @id @default(cuid())
+  testId       String
+  fieldName    String
+  unit         String?
+  normalRange  String?      // human-readable: "13-17", "4000-11000"
+  normalMin    Float?       // numeric low bound for auto H/L flagging
+  normalMax    Float?       // numeric high bound
+  sortOrder    Int      @default(0)
+
+  test         LabTest  @relation(fields: [testId], references: [id], onDelete: Cascade)
+  values       LabValue[]
+}
+
+// ----------------------------------------------------------
+// LAB VISIT
+// ----------------------------------------------------------
+model LabVisit {
+  id            String   @id @default(cuid())
+  visitNumber   String   @unique
+  patientId     String
+  visitDate     DateTime @default(now())
+  status        String   @default("InProgress")
+  totalAmount   Float    @default(0)
+  paymentStatus String   @default("Unpaid")
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  patient Patient     @relation(fields: [patientId], references: [id])
+  records LabRecord[]
+}
+
+// ----------------------------------------------------------
+// LAB RECORD — one test inside a visit
+// ----------------------------------------------------------
+model LabRecord {
+  id           String    @id @default(cuid())
+  visitId      String
+  patientId    String
+  testId       String
+  priceAtVisit Float
+  resultStatus String    @default("Pending")
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  visit   LabVisit   @relation(fields: [visitId], references: [id], onDelete: Cascade)
+  patient Patient    @relation(fields: [patientId], references: [id])
+  test    LabTest    @relation(fields: [testId], references: [id])
+  values  LabValue[]
+}
+
+// ----------------------------------------------------------
+// LAB VALUE — actual result value for one field
+// ----------------------------------------------------------
+model LabValue {
+  id          String   @id @default(cuid())
+  labRecordId String
+  fieldId     String
+  value       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  labRecord LabRecord    @relation(fields: [labRecordId], references: [id], onDelete: Cascade)
+  field     LabTestField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+}
+model Counter {
+  name  String @id
+  value Int    @default(1000)
+}

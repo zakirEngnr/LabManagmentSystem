@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — Arham Diagnostic Laboratory</title>
+
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/layout.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body>
+
+<div class="login-page">
+    <div class="login-card">
+
+        <div class="logo">
+            <img src="/assets/img/logo.png" alt=""
+                 style="height: 64px; width: auto; display: block; margin: 0 auto;"
+                 onerror="this.parentElement.textContent='🧪';">
+        </div>
+        <h1>Arham Diagnostic Laboratory</h1>
+        <p class="subtitle">Enter your access token to continue</p>
+
+        <form id="loginForm" autocomplete="off">
+
+            <div class="form-group">
+                <label for="tokenInput">Access Token</label>
+                <input
+                    type="password"
+                    id="tokenInput"
+                    placeholder="Paste the token from .env"
+                    autocomplete="off"
+                    spellcheck="false"
+                    required
+                >
+                <div class="help-text" id="reasonText"></div>
+            </div>
+
+            <button type="submit" id="loginBtn" class="btn btn-primary btn-block btn-lg">
+                Sign In
+            </button>
+
+        </form>
+
+        <p class="hint">
+            The token is stored on this computer only.<br>
+            Contact your administrator if you don't have it.
+        </p>
+
+    </div>
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/ui.js"></script>
+<script src="../assets/js/animations.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/pages/login.js"></script>
+
+</body>
+</html>

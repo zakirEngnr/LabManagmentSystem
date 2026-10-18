@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports — Arham Diagnostic Laboratory</title>
+
+<link rel="stylesheet" href="../assets/css/base.css">
+<link rel="stylesheet" href="../assets/css/layout.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <header class="topbar">
+        <div class="brand">
+            <img src="/assets/img/logo.png" alt="" class="brand-logo"
+                 onerror="this.style.display='none'">
+            <span>Arham Diagnostic Laboratory</span>
+            <span class="brand-sub">Shalbandi, Buner</span>
+        </div>
+        <div class="meta">
+            <span id="clock" class="clock">--:--:--</span>
+            <button class="logout-btn" onclick="auth.logout()">Logout</button>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <div class="nav-section">Main</div>
+        <a href="../index.html" class="nav-item">
+            <span class="nav-icon">📊</span> Dashboard
+        </a>
+        <a href="./new-visit.html" class="nav-item">
+            <span class="nav-icon">➕</span> New Visit
+        </a>
+        <a href="./visits.html" class="nav-item">
+            <span class="nav-icon">📋</span> Visits
+        </a>
+        <a href="./patients.html" class="nav-item">
+            <span class="nav-icon">👥</span> Patients
+        </a>
+        <a href="./reports.html" class="nav-item active">
+            <span class="nav-icon">📈</span> Reports
+        </a>
+        <div class="nav-divider"></div>
+        <div class="nav-section">Settings</div>
+        <a href="./catalog.html" class="nav-item">
+            <span class="nav-icon">📚</span> Test Catalog
+        </a>
+    </aside>
+
+    <main class="main">
+
+        <div class="page-header">
+            <div class="page-header-left">
+                <h1>Reports</h1>
+                <span class="subtitle" id="rangeLabel">—</span>
+            </div>
+            <div class="page-header-actions">
+                <button class="btn btn-outline" id="printBtn" onclick="window.printReport()">
+                    🖨️ Print / Save PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- ---------- Period selector ---------- -->
+        <div class="report-controls">
+            <div class="period-tabs" role="tablist" aria-label="Report period">
+                <button class="period-tab active" data-period="daily"   onclick="window.setPeriod('daily')">Daily</button>
+                <button class="period-tab"        data-period="weekly"  onclick="window.setPeriod('weekly')">Weekly</button>
+                <button class="period-tab"        data-period="monthly" onclick="window.setPeriod('monthly')">Monthly</button>
+                <button class="period-tab"        data-period="custom"  onclick="window.setPeriod('custom')">Custom</button>
+            </div>
+
+            <div class="custom-range" id="customRange">
+                <label for="fromDate">From</label>
+                <input type="date" id="fromDate">
+                <label for="toDate">To</label>
+                <input type="date" id="toDate">
+                <button class="btn btn-primary btn-sm" onclick="window.applyCustomRange()">Apply</button>
+            </div>
+        </div>
+
+        <!-- ---------- Stats ---------- -->
+        <div class="stats-grid">
+            <div class="stat-card success">
+                <div class="label">Total Income</div>
+                <div class="value" id="statIncome">—</div>
+                <div class="hint">All visits in period</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Visits</div>
+                <div class="value" id="statVisits">—</div>
+                <div class="hint" id="statVisitsHint">Completed + pending</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="label">Pending Results</div>
+                <div class="value" id="statPending">—</div>
+                <div class="hint">Awaiting entry</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Unique Patients</div>
+                <div class="value" id="statPatients">—</div>
+                <div class="hint" id="statPatientsHint">New + returning</div>
+            </div>
+        </div>
+
+        <!-- ---------- Income by Day (auto-hidden for a single-day range) ---------- -->
+        <div class="card" id="byDayCard">
+            <div class="card-header">
+                <h3>Income by Day</h3>
+                <span class="text-muted" id="byDayCount"></span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th class="text-right">Visits</th>
+                            <th class="text-right">Paid Income</th>
+                        </tr>
+                    </thead>
+                    <tbody id="byDayBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ---------- By Category ---------- -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Revenue by Category</h3>
+                <span class="text-muted">Paid visits</span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th class="text-right">Tests</th>
+                            <th class="text-right">Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody id="byCategoryBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ---------- By Test ---------- -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Revenue by Test</h3>
+                <span class="text-muted">Paid visits</span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Test</th>
+                            <th>Category</th>
+                            <th class="text-right">Count</th>
+                            <th class="text-right">Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody id="byTestBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ---------- Top Patients ---------- -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Top Patients by Spend</h3>
+                <span class="text-muted">Paid visits</span>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Patient ID</th>
+                            <th class="text-right">Visits</th>
+                            <th class="text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topPatientsBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+<script src="../assets/js/api.js"></script>
+<script src="../assets/js/ui.js"></script>
+<script src="../assets/js/animations.js"></script>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/pages/reports.js"></script>
+
+</body>
+</html>
+

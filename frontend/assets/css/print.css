@@ -1,0 +1,49 @@
+/* ============================================================
+   print.css
+   Print overrides for the app shell pages.
+   The printable REPORT is generated server-side and has its
+   own CSS — this file only styles the surrounding app pages.
+   Loaded LAST, after components.css.
+   ============================================================ */
+
+@media print {
+
+    .topbar,
+    .sidebar,
+    .page-header-actions,
+    .search-bar,
+    .btn,
+    .no-print {
+        display: none !important;
+    }
+
+    .app-shell {
+        display: block;
+        height: auto;
+        width: auto;
+    }
+
+    .main {
+        padding: 0;
+        overflow: visible;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    .table-wrap { border: 1px solid #999; }
+
+    tr { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .modal-overlay { display: none !important; }
+    .toast-container { display: none !important; }
+}

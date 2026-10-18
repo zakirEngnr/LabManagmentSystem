@@ -1,0 +1,273 @@
+/* ============================================================
+   layout.css
+   The app shell: topbar + sidebar + main content.
+   Loaded SECOND, after base.css.
+   ============================================================ */
+
+/* ---------- App Shell Grid ---------- */
+.app-shell {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-rows: var(--topbar-height) 1fr;
+    grid-template-areas:
+        "topbar topbar"
+        "sidebar main";
+    height: 100vh;
+    width: 100vw;
+}
+
+/* ---------- Topbar ---------- */
+.topbar {
+    grid-area: topbar;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
+}
+
+.topbar .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.topbar .brand-logo {
+    height: 32px;
+    width: 32px;
+    min-height: 32px;
+    min-width: 32px;
+    max-height: 32px;
+    max-width: 32px;
+    display: block;
+    flex-shrink: 0;
+    border-radius: 50%;
+    object-fit: contain;
+}
+
+img[src*="logo.png"],
+.logo img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.topbar .brand-sub {
+    font-size: 11px;
+    opacity: 0.75;
+    font-weight: 400;
+    margin-left: 6px;
+}
+
+.topbar .meta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.topbar .clock {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.12);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+}
+
+.topbar .logout-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: background var(--transition);
+}
+.topbar .logout-btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+    grid-area: sidebar;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 14px 0;
+    overflow-y: auto;
+}
+
+.sidebar .nav-section {
+    padding: 8px 16px 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-faint);
+    margin-top: 6px;
+}
+
+.sidebar .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--transition), color var(--transition);
+    border-right: 3px solid transparent;
+    background: none;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+}
+
+.sidebar .nav-item:hover {
+    background: var(--surface-alt);
+    color: var(--text);
+    text-decoration: none;
+}
+
+.sidebar .nav-item.active {
+    background: #eff6ff;
+    color: var(--primary-light);
+    border-right-color: var(--primary-light);
+    font-weight: 600;
+}
+
+.sidebar .nav-item .nav-icon {
+    font-size: 15px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar .nav-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 10px 16px;
+}
+
+/* ---------- Main content ---------- */
+.main {
+    grid-area: main;
+    padding: 22px 26px;
+    overflow-y: auto;
+    background: var(--bg);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.page-header-left { display: flex; flex-direction: column; gap: 3px; }
+
+.page-header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.page-header .subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.page-header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+}
+.back-link:hover { color: var(--primary-light); text-decoration: none; }
+
+@media (max-width: 900px) {
+    .app-shell { grid-template-columns: 180px 1fr; }
+    .main { padding: 16px; }
+}
+
+/* ---------- Login page layout ---------- */
+.login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    overflow: auto;
+}
+
+.login-card {
+    background: white;
+    padding: 40px 36px;
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--shadow-lg);
+}
+
+.login-card .logo {
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 42px;
+    line-height: 1;
+}
+
+.login-card .logo img {
+    width: 120px;
+    max-width: 120px;
+    height: auto;
+}
+
+.login-card h1 {
+    color: var(--primary);
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 6px;
+}
+
+.login-card .subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-bottom: 26px;
+}
+
+.login-card .hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 16px;
+    line-height: 1.5;
+}

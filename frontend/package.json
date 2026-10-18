@@ -1,0 +1,9 @@
+{
+  "name": "clinic-management-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static frontend for the Arham Diagnostic Laboratory. No build step, no runtime dependencies.",
+  "scripts": {
+    "test": "node --test tests/"
+  }
+}

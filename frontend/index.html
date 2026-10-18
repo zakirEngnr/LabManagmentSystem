@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Arham Diagnostic Laboratory</title>
+
+<link rel="stylesheet" href="/assets/css/base.css">
+<link rel="stylesheet" href="/assets/css/layout.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/animations.css">
+</head>
+<body>
+
+<div class="app-shell">
+
+    <!-- ============ TOPBAR ============ -->
+    <header class="topbar">
+        <div class="brand">
+            <img src="/assets/img/logo.png" alt="" class="brand-logo"
+                 onerror="this.style.display='none'">
+            <span>Arham Diagnostic Laboratory</span>
+            <span class="brand-sub">Shalbandi, Buner</span>
+        </div>
+        <div class="meta">
+            <span id="clock" class="clock">--:--:--</span>
+            <button class="logout-btn" onclick="auth.logout()">Logout</button>
+        </div>
+    </header>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
+        <div class="nav-section">Main</div>
+        <a href="./index.html" class="nav-item active">
+            <span class="nav-icon">📊</span> Dashboard
+        </a>
+        <a href="./pages/new-visit.html" class="nav-item">
+            <span class="nav-icon">➕</span> New Visit
+        </a>
+        <a href="./pages/visits.html" class="nav-item">
+            <span class="nav-icon">📋</span> Visits
+        </a>
+        <a href="./pages/patients.html" class="nav-item">
+            <span class="nav-icon">👥</span> Patients
+        </a>
+        <a href="./pages/reports.html" class="nav-item">
+            <span class="nav-icon">📈</span> Reports
+        </a>
+        <div class="nav-divider"></div>
+        <div class="nav-section">Settings</div>
+        <a href="./pages/catalog.html" class="nav-item">
+            <span class="nav-icon">📚</span> Test Catalog
+        </a>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <main class="main">
+
+        <div class="page-header">
+            <div class="page-header-left">
+                <h1>Dashboard</h1>
+                <span class="subtitle" id="todayDate">—</span>
+            </div>
+            <div class="page-header-actions">
+                <a href="./pages/new-visit.html" class="btn btn-primary btn-lg">
+                    ➕ New Visit
+                </a>
+            </div>
+        </div>
+
+        <!-- ---------- Stats ---------- -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="label">Today's Visits</div>
+                <div class="value" id="statVisits">—</div>
+                <div class="hint">Patients seen today</div>
+            </div>
+            <div class="stat-card warning">
+                <div class="label">Pending Results</div>
+                <div class="value" id="statPending">—</div>
+                <div class="hint">Waiting for entry</div>
+            </div>
+            <div class="stat-card success">
+                <div class="label">Completed Today</div>
+                <div class="value" id="statCompleted">—</div>
+                <div class="hint">Reports ready</div>
+            </div>
+            <div class="stat-card success">
+                <div class="label">Today's Income</div>
+                <div class="value" id="statIncome">—</div>
+                <div class="hint">Payments received</div>
+            </div>
+        </div>
+
+        <!-- ---------- Recent Visits ---------- -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Recent Visits</h3>
+                <a href="./pages/visits.html" class="btn btn-outline btn-sm">
+                    View All →
+                </a>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Visit #</th>
+                            <th>Patient</th>
+                            <th>Time</th>
+                            <th>Tests</th>
+                            <th class="text-right">Amount</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentVisitsBody">
+                        <!-- Skeleton loaded by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/ui.js"></script>
+<script src="/assets/js/animations.js"></script>
+<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/pages/dashboard.js"></script>
+
+</body>
+</html>

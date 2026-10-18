@@ -1,0 +1,353 @@
+/* ============================================================
+   animations.css
+   All motion in one place. Load AFTER components.css.
+
+   Rules:
+   - 250ms is the default duration (smooth, professional)
+   - Easing: cubic-bezier(0.16, 1, 0.3, 1) — smooth deceleration
+   - Respects prefers-reduced-motion (accessibility)
+   Tokens: this file READS --anim / --anim-fast / --ease / --ease-out /
+   --surface-alt / --primary-light / --success via var(--x, fallback) and
+   declares none of them. Declaring them here would override base.css
+   (this sheet loads later), silently ignoring a token you set there.
+   Fallbacks only: base.css owns the value when it defines one.
+   ============================================================ */
+
+/* ============================================================
+   1. PAGE FADE-IN
+   Apply to <body> — every page fades in on load.
+   ============================================================ */
+@keyframes pageIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+body.animate-page-in {
+    animation: pageIn var(--anim, 250ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+/* ============================================================
+   2. TOAST — slide in from right, slide out
+   ============================================================ */
+@keyframes toastIn {
+    from { transform: translateX(110%); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes toastOut {
+    from { transform: translateX(0);    opacity: 1; }
+    to   { transform: translateX(110%); opacity: 0; }
+}
+
+.toast {
+    animation: toastIn var(--anim, 250ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.toast.leaving {
+    animation: toastOut var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)) forwards;
+}
+
+/* ============================================================
+   3. MODAL — scale + fade in, fade out
+   ============================================================ */
+@keyframes overlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes overlayOut {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+@keyframes modalIn {
+    from { transform: scale(0.95) translateY(10px); opacity: 0; }
+    to   { transform: scale(1)    translateY(0);    opacity: 1; }
+}
+
+@keyframes modalOut {
+    from { transform: scale(1)    translateY(0);    opacity: 1; }
+    to   { transform: scale(0.95) translateY(10px); opacity: 0; }
+}
+
+.modal-overlay.animating-in {
+    animation: overlayIn var(--anim-fast, 150ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.modal-overlay.animating-in .modal {
+    animation: modalIn var(--anim, 250ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.modal-overlay.animating-out {
+    animation: overlayOut var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)) forwards;
+    pointer-events: none;
+}
+
+.modal-overlay.animating-out .modal {
+    animation: modalOut var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)) forwards;
+}
+
+/* ============================================================
+   4. STAT CARD HOVER LIFT
+   ============================================================ */
+.stat-card {
+    transition:
+        transform var(--anim, 250ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1)),
+        box-shadow var(--anim, 250ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1)),
+        border-color var(--anim, 250ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1));
+    border-color: var(--border-strong, #cbd5e1);
+}
+
+/* ============================================================
+   5. BUTTON PRESS + HOVER FEEDBACK
+   ============================================================ */
+.btn {
+    transition:
+        background var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)),
+        border-color var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)),
+        color var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)),
+        transform 80ms var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)),
+        box-shadow var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+.btn:not(:disabled):active {
+    transform: scale(0.97);
+}
+
+.btn-primary:not(:disabled):hover {
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.btn-success:not(:disabled):hover {
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.btn-danger:not(:disabled):hover {
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+/* Spinner rotation */
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn .loading {
+    animation: spin 0.7s linear infinite;
+}
+
+/* ============================================================
+   6. TABLE ROW HOVER + NEW ROW FLASH
+   ============================================================ */
+tbody tr {
+    transition: background var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+@keyframes rowFlashGreen {
+    0%   { background: #d1fae5; }
+    100% { background: transparent; }
+}
+
+@keyframes rowFlashRed {
+    0%   { background: #fee2e2; }
+    100% { background: transparent; }
+}
+
+tbody tr.flash-new {
+    animation: rowFlashGreen 1200ms var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+tbody tr.flash-remove {
+    animation: rowFlashRed 1200ms var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+/* ============================================================
+   7. SIDEBAR ACTIVE INDICATOR
+   ============================================================ */
+.sidebar .nav-item {
+    position: relative;
+    transition:
+        background var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)),
+        color var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)),
+        padding-left var(--anim, 250ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+.sidebar .nav-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--primary-light, #dbeafe);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform var(--anim, 250ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+.sidebar .nav-item.active::before {
+    transform: scaleY(1);
+}
+
+.sidebar .nav-item.active {
+    padding-left: 24px;
+}
+
+/* ============================================================
+   8. TEST CHECKBOX SMOOTH TOGGLE
+   ============================================================ */
+.test-checkbox {
+    transition:
+        border-color var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)),
+        background var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1)),
+        transform var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+.test-checkbox:active {
+    transform: scale(0.99);
+}
+
+.test-checkbox.selected {
+    animation: checkPop var(--anim, 250ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+@keyframes checkPop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* ============================================================
+   9. EMPTY STATE FLOAT
+   ============================================================ */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+}
+
+.empty-state .icon {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* ============================================================
+   10. H/L FLAG PULSE
+   ============================================================ */
+@keyframes flagPulse {
+    0%   { transform: scale(1);    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+    50%  { transform: scale(1.15); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+    100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.flag-h.pulse {
+    animation: flagPulse 800ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.flag-l.pulse {
+    animation: flagPulse 800ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+    /* reuse red pulse for both; override shadow color if wanted */
+}
+
+/* ============================================================
+   11. NUMBER COUNT-UP (used by animate.countUp)
+   ============================================================ */
+.counting {
+    transition: color var(--anim-fast, 150ms) var(--ease-out, cubic-bezier(0.33, 1, 0.68, 1));
+}
+
+/* ============================================================
+   12. SKELETON LOADER
+   ============================================================ */
+@keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.skeleton {
+    display: inline-block;
+    height: 14px;
+    border-radius: 4px;
+    background: linear-gradient(
+        90deg,
+        var(--surface-alt, #f1f5f9) 25%,
+        #e9ecf1 50%,
+        var(--surface-alt, #f1f5f9) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    color: transparent;
+    user-select: none;
+}
+
+.skeleton.w-100 { width: 100%; }
+.skeleton.w-80  { width: 80%; }
+.skeleton.w-60  { width: 60%; }
+.skeleton.w-40  { width: 40%; }
+
+.skeleton-row td {
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+/* ============================================================
+   13. FADE-IN FOR DYNAMIC SECTIONS
+   ============================================================ */
+.fade-in {
+    animation: fadeIn var(--anim, 250ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.fade-in-up {
+    animation: fadeInUp var(--anim, 250ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   14. SUMMARY BOX TOTAL BUMP
+   ============================================================ */
+.summary-box .total.bump {
+    animation: bump var(--anim, 250ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+@keyframes bump {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.12); color: var(--success, #16a34a); }
+    100% { transform: scale(1); }
+}
+
+/* ============================================================
+   15. REDUCED MOTION (respect user OS setting)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .empty-state .icon { animation: none; }
+    .skeleton { animation: none; background: var(--surface-alt, #f1f5f9); }
+}
+
+/* ============================================================
+   16. HIDDEN UTILITY
+   animations.js modalIn()/modalOut() toggle this class to show and
+   hide modals. It has to live somewhere load-bearing: base.css and
+   components.css are not guaranteed to define it, and without a rule
+   here a modal could never be hidden. !important guards it against a
+   later .modal { display: flex } in components.css re-showing a closed
+   modal (modalIn/modalOut add/remove .hidden on the same element).
+   ============================================================ */
+.hidden {
+    display: none !important;
+}
